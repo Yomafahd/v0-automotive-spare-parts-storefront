@@ -1,10 +1,17 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata } from 'next'
+import { Cairo } from 'next/font/google'
 import './globals.css'
 
+const cairo = Cairo({
+  subsets: ['arabic', 'latin'],
+  variable: '--font-cairo',
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'الأبرار لقطع غيار السيارات | Al-Abrar Auto Parts',
+  description: 'قطع غيار سيارات صينية أصلية - MG, Chery, Geely | Premium Chinese Auto Spare Parts',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -31,8 +38,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
+    <html lang="ar" dir="rtl" className={`${cairo.variable} bg-background`}>
+      <body className="font-sans antialiased min-h-screen">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
