@@ -23,8 +23,13 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const { getTotalItems, openCart } = useCartStore()
-  const totalItems = getTotalItems()
+  const totalItems = mounted ? getTotalItems() : 0
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {

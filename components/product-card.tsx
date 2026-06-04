@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,9 +16,15 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, index = 0 }: ProductCardProps) {
+  const [mounted, setMounted] = useState(false)
   const { addItem, openCart } = useCartStore()
 
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const handleAddToCart = () => {
+    if (!mounted) return
     addItem(product)
     openCart()
   }
