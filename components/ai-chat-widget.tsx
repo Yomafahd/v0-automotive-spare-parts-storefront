@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Send, Bot, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -22,16 +22,26 @@ const initialMessages: Message[] = [
 ]
 
 export function AIChatWidget() {
+  const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const messageIdRef = useRef(1)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Don't render during SSR to avoid hydration mismatch
+  if (!mounted) return null
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return
 
+    messageIdRef.current += 1
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: `msg-${messageIdRef.current}`,
       role: 'user',
       content: input.trim(),
     }
@@ -48,10 +58,12 @@ export function AIChatWidget() {
         'يمكنك تصفح الكتالوج أو إخباري برقم القطعة للبحث مباشرة.',
         'نوفر شحن مجاني للطلبات فوق 500 ريال. هل تريد معرفة المزيد عن سياسة الشحن؟',
       ]
+      messageIdRef.current += 1
+      const responseIndex = messageIdRef.current % responses.length
       const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: `msg-${messageIdRef.current}`,
         role: 'assistant',
-        content: responses[Math.floor(Math.random() * responses.length)],
+        content: responses[responseIndex],
       }
       setMessages((prev) => [...prev, assistantMessage])
       setIsLoading(false)
