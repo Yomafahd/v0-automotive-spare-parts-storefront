@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { useEffect, useState } from 'react'
 import type { CartItem, Product } from './types'
 
 interface CartState {
@@ -16,7 +17,7 @@ interface CartState {
   getTotalPrice: () => number
 }
 
-export const useCartStore = create<CartState>()(
+export const useCartStoreBase = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
@@ -77,6 +78,30 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: 'al-abrar-cart',
+      skipHydration: true,
     }
   )
 )
+
+// Custom hook that handles hydration safely
+export function useCartStore() {
+  const store = useCartStoreBase()
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  useEffect(() => {
+    useCartStoreBase.persist.rehydrate()
+    setIsHydrated(true)
+  }, [])
+
+  // Return default values during SSR/before hydration
+  if (!isHydrated) {
+    return {
+      ...store,
+      items: [],
+      getTotalItems: () => 0,
+      getTotalPrice: () => 0,
+    }
+  }
+
+  return store
+}
