@@ -15,12 +15,14 @@ import {
   Plus,
   Minus,
   Check,
-  ChevronRight
+  ChevronRight,
+  MessageCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { useCartStore } from '@/lib/cart-store'
+import { formatPrice, isPriceAvailable, generateWhatsAppUrl } from '@/lib/format-price'
 import type { Product } from '@/lib/types'
 
 interface ProductDetailsProps {
@@ -125,13 +127,21 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 
             {/* Price */}
             <div className="flex items-baseline gap-4">
-              <span className="text-4xl font-bold text-primary">
-                {product.price.toLocaleString()} ر.س
-              </span>
-              {product.originalPrice && (
-                <span className="text-xl text-muted-foreground line-through">
-                  {product.originalPrice.toLocaleString()} ر.س
-                </span>
+              {isPriceAvailable(product.price) ? (
+                <>
+                  <span className="text-4xl font-bold text-primary">
+                    {formatPrice(product.price)}
+                  </span>
+                  {product.originalPrice && (
+                    <span className="text-xl text-muted-foreground line-through">
+                      {formatPrice(product.originalPrice)}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-lg px-4 py-2">
+                  اتصل للسعر
+                </Badge>
               )}
             </div>
 
@@ -198,12 +208,26 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             {/* Action Buttons */}
             <div className="flex gap-3">
               <Button
+                asChild
+                size="lg"
+                className="flex-1 h-14 bg-green-600 hover:bg-green-700 text-white font-bold"
+              >
+                <a
+                  href={generateWhatsAppUrl(product.nameAr)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MessageCircle className="w-5 h-5 ml-2" />
+                  استفسر عبر واتساب
+                </a>
+              </Button>
+              <Button
                 variant="outline"
                 size="lg"
-                className="flex-1 border-border text-foreground hover:bg-accent"
+                className="border-border text-foreground hover:bg-accent"
               >
                 <Heart className="w-5 h-5 ml-2" />
-                أضف للمفضلة
+                المفضلة
               </Button>
               <Button
                 variant="outline"

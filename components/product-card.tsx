@@ -3,10 +3,11 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Star, ShoppingCart, Eye } from 'lucide-react'
+import { Star, ShoppingCart, Eye, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useCartStore } from '@/lib/cart-store'
+import { formatPrice, isPriceAvailable, generateWhatsAppUrl } from '@/lib/format-price'
 import type { Product } from '@/lib/types'
 
 interface ProductCardProps {
@@ -124,18 +125,41 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           </div>
 
           {/* Price */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <span className="text-xl font-bold text-primary">
-                {product.price.toLocaleString()} ر.س
-              </span>
-              {product.originalPrice && (
-                <span className="text-sm text-muted-foreground line-through mr-2">
-                  {product.originalPrice.toLocaleString()}
-                </span>
+              {isPriceAvailable(product.price) ? (
+                <>
+                  <span className="text-xl font-bold text-primary">
+                    {formatPrice(product.price)}
+                  </span>
+                  {product.originalPrice && (
+                    <span className="text-sm text-muted-foreground line-through mr-2">
+                      {formatPrice(product.originalPrice)}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                  اتصل للسعر
+                </Badge>
               )}
             </div>
           </div>
+
+          {/* WhatsApp Button */}
+          <Button
+            asChild
+            className="w-full bg-green-600 hover:bg-green-700 text-white"
+          >
+            <a
+              href={generateWhatsAppUrl(product.nameAr)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MessageCircle className="w-4 h-4 ml-2" />
+              استفسر عبر واتساب
+            </a>
+          </Button>
         </div>
       </div>
     </motion.div>
