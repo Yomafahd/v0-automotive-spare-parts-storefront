@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { useCartStore } from '@/lib/cart-store'
 import { brands, categories } from '@/lib/data'
 import { CartDrawer } from './cart-drawer'
@@ -203,16 +203,15 @@ export function Header() {
               </Button>
 
               {/* Mobile Menu */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden text-foreground hover:text-primary hover:bg-accent"
+                onClick={() => setMobileMenuOpen(true)}
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="lg:hidden text-foreground hover:text-primary hover:bg-accent"
-                  >
-                    <Menu className="w-5 h-5" />
-                  </Button>
-                </SheetTrigger>
                 <SheetContent side="right" className="w-80 glass-panel border-border">
                   <div className="flex flex-col gap-6 mt-8">
                     <Link 
