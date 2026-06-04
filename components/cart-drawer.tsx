@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { X, Plus, Minus, ShoppingBag, Trash2 } from 'lucide-react'
@@ -10,16 +9,7 @@ import { Separator } from '@/components/ui/separator'
 import { useCartStore } from '@/lib/cart-store'
 
 export function CartDrawer() {
-  const [mounted, setMounted] = useState(false)
   const { items, isOpen, closeCart, updateQuantity, removeItem, getTotalPrice } = useCartStore()
-  
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  // Don't render during SSR to avoid hydration mismatch
-  if (!mounted) return null
-
   const totalPrice = getTotalPrice()
 
   return (

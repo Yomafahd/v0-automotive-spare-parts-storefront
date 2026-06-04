@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useCartStore } from '@/lib/cart-store'
 import { brands, categories } from '@/lib/data'
 import { CartDrawer } from './cart-drawer'
@@ -23,13 +23,8 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const { getTotalItems, openCart } = useCartStore()
-  const totalItems = mounted ? getTotalItems() : 0
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const totalItems = getTotalItems()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -108,7 +103,7 @@ export function Header() {
                     {brands.map((brand) => (
                       <Link
                         key={brand.id}
-                        href={`/catalog?brand=${brand.id}`}
+                        href={`/brands/${brand.id}`}
                         className="block px-4 py-2 text-foreground hover:text-primary hover:bg-accent rounded-lg transition-colors"
                       >
                         {brand.nameAr}
@@ -143,6 +138,13 @@ export function Header() {
                 className="text-foreground hover:text-primary transition-colors font-medium"
               >
                 جميع المنتجات
+              </Link>
+              
+              <Link 
+                href="/blog" 
+                className="text-foreground hover:text-primary transition-colors font-medium"
+              >
+                المدونة
               </Link>
             </nav>
 
@@ -203,15 +205,16 @@ export function Header() {
               </Button>
 
               {/* Mobile Menu */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden text-foreground hover:text-primary hover:bg-accent"
-                onClick={() => setMobileMenuOpen(true)}
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="lg:hidden text-foreground hover:text-primary hover:bg-accent"
+                  >
+                    <Menu className="w-5 h-5" />
+                  </Button>
+                </SheetTrigger>
                 <SheetContent side="right" className="w-80 glass-panel border-border">
                   <div className="flex flex-col gap-6 mt-8">
                     <Link 
@@ -227,7 +230,7 @@ export function Header() {
                       {brands.map((brand) => (
                         <Link
                           key={brand.id}
-                          href={`/catalog?brand=${brand.id}`}
+                          href={`/brands/${brand.id}`}
                           onClick={() => setMobileMenuOpen(false)}
                           className="block py-2 text-foreground hover:text-primary transition-colors"
                         >
@@ -256,6 +259,14 @@ export function Header() {
                       className="text-lg font-medium text-foreground hover:text-primary transition-colors"
                     >
                       جميع المنتجات
+                    </Link>
+                    
+                    <Link 
+                      href="/blog" 
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-lg font-medium text-foreground hover:text-primary transition-colors"
+                    >
+                      المدونة
                     </Link>
                   </div>
                 </SheetContent>

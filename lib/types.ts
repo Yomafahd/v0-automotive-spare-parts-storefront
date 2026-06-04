@@ -27,4 +27,25 @@ export interface Brand {
   nameAr: string
   logo: string
   models: string[]
+  description?: string
+  descriptionAr?: string
+  heroImage?: string
+}
+
+export interface BlogArticle {
+  slug: string
+  title: string
+  titleAr: string
+  excerpt: string
+  excerptAr: string
+  content: string
+  contentAr: string
+  category: 'maintenance' | 'news' | 'tips' | 'reviews'
+  categoryAr: string
+  thumbnail: string
+  heroImage: string
+  author: string
+  authorAr: string
+  date: string
+  readTime: number
 }
